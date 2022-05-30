@@ -1,4 +1,4 @@
-package enums
+package movements
 
 type Movement struct {
 	slug string

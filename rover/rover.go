@@ -1,42 +1,31 @@
 package rover
 
 import (
-	"fmt"
-	. "go-mars-rover/rover/enums"
+	mv "go-mars-rover/rover/movements"
+	or "go-mars-rover/rover/orientations"
 )
 
 type Rover struct {
 	absiss      int
 	ordinate    int
-	orientation string
+	orientation or.Orientation
 }
 
-type InvalidOrientationError struct {
-	orientation string
-}
-
-func (e InvalidOrientationError) Error() string {
-	if e.orientation == "" {
-		return "The rover orientation is invalid"
-	}
-	return fmt.Sprintf("\"%s\" is not a valid rover orientation", e.orientation)
-}
-
-func New(absiss int, ordinate int, orientation string) (Rover, error) {
+func New(absiss int, ordinate int, orientation or.Orientation) (Rover, error) {
 	switch orientation {
-	case "N", "W", "E", "S":
+	case or.North, or.East, or.West, or.South:
 		return Rover{absiss, ordinate, orientation}, nil
 	default:
-		return Rover{}, InvalidOrientationError{orientation}
+		return Rover{}, or.InvalidOrientationError{}
 	}
 }
 
-func (r *Rover) Move(commands []Movement) {
+func (r *Rover) Move(commands []mv.Movement) {
 	for i := 0; i < len(commands); i++ {
-		if commands[i] == Forward {
+		if commands[i] == mv.Forward {
 			r.ordinate++
 		}
-		if commands[i] == Backward {
+		if commands[i] == mv.Backward {
 			r.ordinate--
 		}
 	}
@@ -45,7 +34,7 @@ func (r *Rover) Move(commands []Movement) {
 type Position struct {
 	absiss      int
 	ordinate    int
-	orientation string
+	orientation or.Orientation
 }
 
 func (r Rover) Position() Position {
