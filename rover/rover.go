@@ -1,6 +1,9 @@
 package rover
 
-import "fmt"
+import (
+	"fmt"
+	. "go-mars-rover/rover/enums"
+)
 
 type Rover struct {
 	absiss      int
@@ -28,19 +31,15 @@ func New(absiss int, ordinate int, orientation string) (Rover, error) {
 	}
 }
 
-type Movement string
-
-const (
-	Forward Movement = "f"
-)
-
 func (r *Rover) Move(commands []Movement) {
 	for i := 0; i < len(commands); i++ {
 		if commands[i] == Forward {
 			r.ordinate++
 		}
+		if commands[i] == Backward {
+			r.ordinate--
+		}
 	}
-
 }
 
 type Position struct {

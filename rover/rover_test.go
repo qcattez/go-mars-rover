@@ -3,6 +3,7 @@ package rover
 import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	. "go-mars-rover/rover/enums"
 )
 
 var _ = Describe("Rover", func() {
@@ -72,7 +73,7 @@ var _ = Describe("Rover", func() {
 		Expect(rover.Position()).To(Equal(Position{0, 1, "N"}))
 	})
 
-	It("should move forward twice with 2 forward command", func() {
+	It("should move forward twice with 2 forward commands", func() {
 		// Given
 		rover, _ := New(0, 0, "N")
 		commands := []Movement{Forward, Forward}
@@ -82,5 +83,29 @@ var _ = Describe("Rover", func() {
 
 		// Then
 		Expect(rover.Position()).To(Equal(Position{0, 2, "N"}))
+	})
+
+	It("should move forward once with 2 forward and 1 backward commands", func() {
+		// Given
+		rover, _ := New(0, 0, "N")
+		commands := []Movement{Forward, Forward, Backward}
+
+		// When
+		rover.Move(commands)
+
+		// Then
+		Expect(rover.Position()).To(Equal(Position{0, 1, "N"}))
+	})
+
+	It("should move backward once with 1 backward command", func() {
+		// Given
+		rover, _ := New(0, 0, "N")
+		commands := []Movement{Backward}
+
+		// When
+		rover.Move(commands)
+
+		// Then
+		Expect(rover.Position()).To(Equal(Position{0, -1, "N"}))
 	})
 })
