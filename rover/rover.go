@@ -6,19 +6,20 @@ import (
 )
 
 type Rover struct {
-	absiss      int
-	ordinate    int
-	orientation Orientation
+	absiss              uint
+	ordinate            uint
+	planetCircumference uint
+	orientation         Orientation
 }
 
 type Position struct {
-	absiss      int
-	ordinate    int
+	absiss      uint
+	ordinate    uint
 	orientation Orientation
 }
 
-func New(absiss int, ordinate int, orientation Orientation) Rover {
-	return Rover{absiss, ordinate, orientation}
+func New(absiss uint, ordinate uint, planetCircumference uint, orientation Orientation) Rover {
+	return Rover{absiss, ordinate, planetCircumference, orientation}
 }
 
 func (r Rover) Position() Position {
@@ -77,19 +78,30 @@ func (r Rover) isCommandToMoveEast(command Command) bool {
 }
 
 func (r *Rover) moveNorth() {
-	r.ordinate++
+	r.ordinate = moveForward(r.ordinate, r.planetCircumference)
 }
 
 func (r *Rover) moveSouth() {
-	r.ordinate--
+	r.ordinate = moveBackward(r.ordinate, r.planetCircumference)
 }
 
 func (r *Rover) moveWest() {
-	r.absiss++
+	r.absiss = moveForward(r.absiss, r.planetCircumference)
 }
 
 func (r *Rover) moveEast() {
-	r.absiss--
+	r.absiss = moveBackward(r.absiss, r.planetCircumference)
+}
+
+func moveForward(coordinate, planetCircumference uint) uint {
+	return (coordinate + 1) % planetCircumference
+}
+
+func moveBackward(coordinate, planetCircumference uint) uint {
+	if coordinate == 0 {
+		return planetCircumference - 1
+	}
+	return coordinate - 1
 }
 
 func (r Rover) isCommandToTurnEast(command Command) bool {
