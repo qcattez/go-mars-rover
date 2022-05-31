@@ -5,7 +5,9 @@ type Command struct {
 }
 
 var (
-	Unknown  = Command{}
-	Forward  = Command{"f"}
-	Backward = Command{"b"}
+	Unknown   = Command{}
+	Forward   = Command{"f"}
+	Backward  = Command{"b"}
+	TurnRight = Command{"r"}
+	TurnLeft  = Command{"l"}
 )

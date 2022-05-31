@@ -44,21 +44,35 @@ func (r *Rover) executeCommand(command Command) {
 	if r.isCommandToMoveEast(command) {
 		r.moveEast()
 	}
+	if r.isCommandToTurnEast(command) {
+		r.orientation = East
+		return
+	}
+	if r.isCommandToTurnWest(command) {
+		r.orientation = West
+		return
+	}
+	if r.isCommandToTurnNorth(command) {
+		r.orientation = North
+	}
+	if r.isCommandToTurnSouth(command) {
+		r.orientation = South
+	}
 }
 
-func (r *Rover) isCommandToMoveNorth(command Command) bool {
+func (r Rover) isCommandToMoveNorth(command Command) bool {
 	return (r.orientation == North && command == Forward) || (r.orientation == South && command == Backward)
 }
 
-func (r *Rover) isCommandToMoveSouth(command Command) bool {
+func (r Rover) isCommandToMoveSouth(command Command) bool {
 	return (r.orientation == South && command == Forward) || (r.orientation == North && command == Backward)
 }
 
-func (r *Rover) isCommandToMoveWest(command Command) bool {
+func (r Rover) isCommandToMoveWest(command Command) bool {
 	return (r.orientation == West && command == Forward) || (r.orientation == East && command == Backward)
 }
 
-func (r *Rover) isCommandToMoveEast(command Command) bool {
+func (r Rover) isCommandToMoveEast(command Command) bool {
 	return (r.orientation == East && command == Forward) || (r.orientation == West && command == Backward)
 }
 
@@ -76,4 +90,20 @@ func (r *Rover) moveWest() {
 
 func (r *Rover) moveEast() {
 	r.absiss--
+}
+
+func (r Rover) isCommandToTurnEast(command Command) bool {
+	return (r.orientation == North && command == TurnRight) || (r.orientation == South && command == TurnLeft)
+}
+
+func (r Rover) isCommandToTurnWest(command Command) bool {
+	return (r.orientation == North && command == TurnLeft) || (r.orientation == South && command == TurnRight)
+}
+
+func (r Rover) isCommandToTurnNorth(command Command) bool {
+	return (r.orientation == East && command == TurnLeft) || (r.orientation == West && command == TurnRight)
+}
+
+func (r Rover) isCommandToTurnSouth(command Command) bool {
+	return (r.orientation == East && command == TurnRight) || (r.orientation == West && command == TurnLeft)
 }

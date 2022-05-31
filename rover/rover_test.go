@@ -149,4 +149,100 @@ var _ = Describe("Rover", func() {
 		// Then
 		Expect(rover.Position()).To(Equal(Position{1, 0, East}))
 	})
+
+	It("should be oriented east after a right turn from north orientation", func() {
+		// Given
+		rover := New(0, 0, North)
+		commands := []Command{TurnRight}
+
+		// When
+		rover.ExecuteCommands(commands)
+
+		// Then
+		Expect(rover.Position()).To(Equal(Position{0, 0, East}))
+	})
+
+	It("should be oriented west after a left turn from north orientation", func() {
+		// Given
+		rover := New(0, 0, North)
+		commands := []Command{TurnLeft}
+
+		// When
+		rover.ExecuteCommands(commands)
+
+		// Then
+		Expect(rover.Position()).To(Equal(Position{0, 0, West}))
+	})
+
+	It("should be oriented east after a left turn from south orientation", func() {
+		// Given
+		rover := New(0, 0, South)
+		commands := []Command{TurnLeft}
+
+		// When
+		rover.ExecuteCommands(commands)
+
+		// Then
+		Expect(rover.Position()).To(Equal(Position{0, 0, East}))
+	})
+
+	It("should be oriented west after a right turn from south orientation", func() {
+		// Given
+		rover := New(0, 0, South)
+		commands := []Command{TurnRight}
+
+		// When
+		rover.ExecuteCommands(commands)
+
+		// Then
+		Expect(rover.Position()).To(Equal(Position{0, 0, West}))
+	})
+
+	It("should be oriented north after a left turn from east orientation", func() {
+		// Given
+		rover := New(0, 0, East)
+		commands := []Command{TurnLeft}
+
+		// When
+		rover.ExecuteCommands(commands)
+
+		// Then
+		Expect(rover.Position()).To(Equal(Position{0, 0, North}))
+	})
+
+	It("should be oriented south after a right turn from east orientation", func() {
+		// Given
+		rover := New(0, 0, East)
+		commands := []Command{TurnRight}
+
+		// When
+		rover.ExecuteCommands(commands)
+
+		// Then
+		Expect(rover.Position()).To(Equal(Position{0, 0, South}))
+	})
+
+	It("should be oriented south after a left turn from west orientation", func() {
+		// Given
+		rover := New(0, 0, West)
+		commands := []Command{TurnLeft}
+
+		// When
+		rover.ExecuteCommands(commands)
+
+		// Then
+		Expect(rover.Position()).To(Equal(Position{0, 0, South}))
+	})
+
+	It("should be oriented north after a right turn from west orientation", func() {
+		// Given
+		rover := New(0, 0, West)
+		commands := []Command{TurnRight}
+
+		// When
+		rover.ExecuteCommands(commands)
+
+		// Then
+		Expect(rover.Position()).To(Equal(Position{0, 0, North}))
+	})
 })
