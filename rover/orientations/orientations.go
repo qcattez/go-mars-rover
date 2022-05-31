@@ -5,15 +5,8 @@ type Orientation struct {
 }
 
 var (
-	Unknown = Orientation{}
-	North   = Orientation{"N"}
-	East    = Orientation{"E"}
-	West    = Orientation{"W"}
-	South   = Orientation{"S"}
+	North = Orientation{"N"}
+	East  = Orientation{"E"}
+	West  = Orientation{"W"}
+	South = Orientation{"S"}
 )
-
-type InvalidOrientationError struct{}
-
-func (e InvalidOrientationError) Error() string {
-	return "The rover orientation is unknown"
-}
