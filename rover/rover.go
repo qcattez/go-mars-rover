@@ -50,11 +50,11 @@ func (r *Rover) executeCommand(command Command) {
 }
 
 func (r *Rover) moveForward() {
-	r.position = r.position.move(r.orientation, r.planetCircumference)
+	r.position = r.position.next(r.orientation, r.planetCircumference)
 }
 
 func (r *Rover) moveBackward() {
-	r.position = r.position.move(r.orientation.Opposite(), r.planetCircumference)
+	r.position = r.position.next(r.orientation.Opposite(), r.planetCircumference)
 }
 
 func (r *Rover) turnLeft() {
@@ -65,7 +65,7 @@ func (r *Rover) turnRight() {
 	r.orientation = r.orientation.TurnRight()
 }
 
-func (p Position) move(orientation Orientation, planetCircumference uint) Position {
+func (p Position) next(orientation Orientation, planetCircumference uint) Position {
 	if orientation == North {
 		return Position{p.absiss, incrementCoordinate(p.ordinate, planetCircumference)}
 	}
