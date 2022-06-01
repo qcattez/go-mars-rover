@@ -6,24 +6,26 @@ import (
 )
 
 type Rover struct {
-	absiss              uint
-	ordinate            uint
-	planetCircumference uint
+	position            Position
 	orientation         Orientation
+	planetCircumference uint
 }
 
 type Position struct {
-	absiss      uint
-	ordinate    uint
-	orientation Orientation
+	absiss   uint
+	ordinate uint
 }
 
 func New(absiss uint, ordinate uint, planetCircumference uint, orientation Orientation) Rover {
-	return Rover{absiss, ordinate, planetCircumference, orientation}
+	return Rover{Position{absiss, ordinate}, orientation, planetCircumference}
 }
 
 func (r Rover) Position() Position {
-	return Position{r.absiss, r.ordinate, r.orientation}
+	return r.position
+}
+
+func (r Rover) Orientation() Orientation {
+	return r.orientation
 }
 
 func (r *Rover) ExecuteCommands(commands []Command) {
@@ -33,89 +35,56 @@ func (r *Rover) ExecuteCommands(commands []Command) {
 }
 
 func (r *Rover) executeCommand(command Command) {
-	if r.isCommandToMoveNorth(command) {
-		r.moveNorth()
+	if command == Forward {
+		r.moveForward()
 	}
-	if r.isCommandToMoveSouth(command) {
-		r.moveSouth()
+	if command == Backward {
+		r.moveBackward()
 	}
-	if r.isCommandToMoveWest(command) {
-		r.moveWest()
+	if command == TurnLeft {
+		r.turnLeft()
 	}
-	if r.isCommandToMoveEast(command) {
-		r.moveEast()
-	}
-	if r.isCommandToTurnEast(command) {
-		r.orientation = East
-		return
-	}
-	if r.isCommandToTurnWest(command) {
-		r.orientation = West
-		return
-	}
-	if r.isCommandToTurnNorth(command) {
-		r.orientation = North
-	}
-	if r.isCommandToTurnSouth(command) {
-		r.orientation = South
+	if command == TurnRight {
+		r.turnRight()
 	}
 }
 
-func (r Rover) isCommandToMoveNorth(command Command) bool {
-	return (r.orientation == North && command == Forward) || (r.orientation == South && command == Backward)
+func (r *Rover) moveForward() {
+	r.position = r.position.move(r.orientation, r.planetCircumference)
 }
 
-func (r Rover) isCommandToMoveSouth(command Command) bool {
-	return (r.orientation == South && command == Forward) || (r.orientation == North && command == Backward)
+func (r *Rover) moveBackward() {
+	r.position = r.position.move(r.orientation.Opposite(), r.planetCircumference)
 }
 
-func (r Rover) isCommandToMoveWest(command Command) bool {
-	return (r.orientation == West && command == Forward) || (r.orientation == East && command == Backward)
+func (r *Rover) turnLeft() {
+	r.orientation = r.orientation.TurnLeft()
 }
 
-func (r Rover) isCommandToMoveEast(command Command) bool {
-	return (r.orientation == East && command == Forward) || (r.orientation == West && command == Backward)
+func (r *Rover) turnRight() {
+	r.orientation = r.orientation.TurnRight()
 }
 
-func (r *Rover) moveNorth() {
-	r.ordinate = moveForward(r.ordinate, r.planetCircumference)
+func (p Position) move(orientation Orientation, planetCircumference uint) Position {
+	if orientation == North {
+		return Position{p.absiss, incrementCoordinate(p.ordinate, planetCircumference)}
+	}
+	if orientation == South {
+		return Position{p.absiss, decrementCoordinate(p.ordinate, planetCircumference)}
+	}
+	if orientation == West {
+		return Position{incrementCoordinate(p.absiss, planetCircumference), p.ordinate}
+	}
+	return Position{decrementCoordinate(p.absiss, planetCircumference), p.ordinate}
 }
 
-func (r *Rover) moveSouth() {
-	r.ordinate = moveBackward(r.ordinate, r.planetCircumference)
-}
-
-func (r *Rover) moveWest() {
-	r.absiss = moveForward(r.absiss, r.planetCircumference)
-}
-
-func (r *Rover) moveEast() {
-	r.absiss = moveBackward(r.absiss, r.planetCircumference)
-}
-
-func moveForward(coordinate, planetCircumference uint) uint {
+func incrementCoordinate(coordinate, planetCircumference uint) uint {
 	return (coordinate + 1) % planetCircumference
 }
 
-func moveBackward(coordinate, planetCircumference uint) uint {
+func decrementCoordinate(coordinate, planetCircumference uint) uint {
 	if coordinate == 0 {
 		return planetCircumference - 1
 	}
 	return coordinate - 1
-}
-
-func (r Rover) isCommandToTurnEast(command Command) bool {
-	return (r.orientation == North && command == TurnRight) || (r.orientation == South && command == TurnLeft)
-}
-
-func (r Rover) isCommandToTurnWest(command Command) bool {
-	return (r.orientation == North && command == TurnLeft) || (r.orientation == South && command == TurnRight)
-}
-
-func (r Rover) isCommandToTurnNorth(command Command) bool {
-	return (r.orientation == East && command == TurnLeft) || (r.orientation == West && command == TurnRight)
-}
-
-func (r Rover) isCommandToTurnSouth(command Command) bool {
-	return (r.orientation == East && command == TurnRight) || (r.orientation == West && command == TurnLeft)
 }
