@@ -28,41 +28,11 @@ func (r Rover) Orientation() Orientation {
 	return r.orientation
 }
 
-func (r *Rover) ExecuteCommands(commands []Command) {
-	for i := 0; i < len(commands); i++ {
-		r.executeCommand(commands[i])
+func (r *Rover) ExecuteCommands(commandStrings []CommandString) {
+	for i := 0; i < len(commandStrings); i++ {
+		executableCommand := ExecutableCommandFactory(commandStrings[i])
+		executableCommand.execute(r)
 	}
-}
-
-func (r *Rover) executeCommand(command Command) {
-	if command == Forward {
-		r.moveForward()
-	}
-	if command == Backward {
-		r.moveBackward()
-	}
-	if command == TurnLeft {
-		r.turnLeft()
-	}
-	if command == TurnRight {
-		r.turnRight()
-	}
-}
-
-func (r *Rover) moveForward() {
-	r.position = r.position.next(r.orientation, r.planetCircumference)
-}
-
-func (r *Rover) moveBackward() {
-	r.position = r.position.next(r.orientation.Opposite(), r.planetCircumference)
-}
-
-func (r *Rover) turnLeft() {
-	r.orientation = r.orientation.TurnLeft()
-}
-
-func (r *Rover) turnRight() {
-	r.orientation = r.orientation.TurnRight()
 }
 
 func (p Position) next(orientation Orientation, planetCircumference uint) Position {
@@ -87,4 +57,42 @@ func decrementCoordinate(coordinate, planetCircumference uint) uint {
 		return planetCircumference - 1
 	}
 	return coordinate - 1
+}
+
+func ExecutableCommandFactory(commandString CommandString) ExecutableCommand {
+	if commandString == Forward {
+		return ExecutableForward{}
+	}
+	if commandString == Backward {
+		return ExecutableBackward{}
+	}
+	if commandString == TurnRight {
+		return ExecutableTurnRight{}
+	}
+	return ExecutableTurnLeft{}
+}
+
+type ExecutableCommand interface {
+	execute(*Rover)
+}
+
+type ExecutableForward struct{}
+type ExecutableBackward struct{}
+type ExecutableTurnRight struct{}
+type ExecutableTurnLeft struct{}
+
+func (e ExecutableForward) execute(rover *Rover) {
+	rover.position = rover.position.next(rover.orientation, rover.planetCircumference)
+}
+
+func (e ExecutableBackward) execute(rover *Rover) {
+	rover.position = rover.position.next(rover.orientation.Opposite(), rover.planetCircumference)
+}
+
+func (e ExecutableTurnRight) execute(rover *Rover) {
+	rover.orientation = rover.orientation.TurnRight()
+}
+
+func (e ExecutableTurnLeft) execute(rover *Rover) {
+	rover.orientation = rover.orientation.TurnLeft()
 }

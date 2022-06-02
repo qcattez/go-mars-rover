@@ -1,10 +1,10 @@
 package commands
 
-type Command string
+type CommandString string
 
 var (
-	Forward   Command = "f"
-	Backward  Command = "b"
-	TurnRight Command = "r"
-	TurnLeft  Command = "l"
+	Forward   CommandString = "f"
+	Backward  CommandString = "b"
+	TurnRight CommandString = "r"
+	TurnLeft  CommandString = "l"
 )
